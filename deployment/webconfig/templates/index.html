@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinderGPT Web-Konfiguration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-robot"></i> TinderGPT Web-Konfiguration</h1>
+            <p class="subtitle">Vollständige Systemkonfiguration über Web-Interface</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="general">
+                <i class="fas fa-cog"></i> Allgemein
+            </button>
+            <button class="tab-btn" data-tab="conversation">
+                <i class="fas fa-comments"></i> Konversation
+            </button>
+            <button class="tab-btn" data-tab="timing">
+                <i class="fas fa-clock"></i> Timing
+            </button>
+            <button class="tab-btn" data-tab="matches">
+                <i class="fas fa-users"></i> Match-Anweisungen
+            </button>
+            <button class="tab-btn" data-tab="excluded">
+                <i class="fas fa-ban"></i> Ausgeschlossene Chats
+            </button>
+            <button class="tab-btn" data-tab="debug">
+                <i class="fas fa-bug"></i> Debug
+            </button>
+            <button class="tab-btn" data-tab="system">
+                <i class="fas fa-server"></i> System
+            </button>
+        </nav>
+
+        <main class="content">
+            <!-- General Configuration -->
+            <div class="tab-content active" id="general">
+                <!-- Bot Status and Control -->
+                <div class="card">
+                    <h2><i class="fas fa-robot"></i> Bot-Status & Steuerung</h2>
+                    <div class="bot-status-container">
+                        <div class="status-overview">
+                            <div class="status-item">
+                                <span class="status-label">Bot-Status:</span>
+                                <span id="botStatus" class="status-value">Lädt...</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Version:</span>
+                                <span id="botVersion" class="status-value">-</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Aktive Chats:</span>
+                                <span id="activeChats" class="status-value">-</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Gesamt Matches:</span>
+                                <span id="totalMatches" class="status-value">-</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Ausgeschlossene Chats:</span>
+                                <span id="excludedChats" class="status-value">-</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Geplante Antworten:</span>
+                                <span id="scheduledResponses" class="status-value">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-controls">
+                            <button type="button" id="startBot" class="btn btn-success">
+                                <i class="fas fa-play"></i> Bot starten
+                            </button>
+                            <button type="button" id="stopBot" class="btn btn-danger">
+                                <i class="fas fa-stop"></i> Bot stoppen
+                            </button>
+                            <button type="button" id="refreshStatus" class="btn btn-info">
+                                <i class="fas fa-refresh"></i> Status aktualisieren
+                            </button>
+                        </div>
+                        
+                        <div class="scheduled-responses-list" id="scheduledResponsesList">
+                            <!-- Scheduled responses will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Configuration -->
+                <div class="card">
+                    <h2><i class="fas fa-cog"></i> Vollständige Konfiguration</h2>
+                    <div class="config-sections">
+                        <!-- API Configuration -->
+                        <div class="config-section">
+                            <h3>API-Konfiguration</h3>
+                            <div class="form-group">
+                                <label for="apiKey">OpenAI API Key:</label>
+                                <input type="password" id="apiKey" name="api_key" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="tinderAuthToken">Tinder Auth Token:</label>
+                                <input type="text" id="tinderAuthToken" name="tinder-auth-token" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- User Information -->
+                        <div class="config-section">
+                            <h3>Benutzer-Informationen</h3>
+                            <div class="form-group">
+                                <label for="userName">Benutzername:</label>
+                                <input type="text" id="userName" name="user_name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="userInfo">Benutzer-Info:</label>
+                                <textarea id="userInfo" name="user_info" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Goals -->
+                        <div class="config-section">
+                            <h3>Ziele</h3>
+                            <div class="form-group">
+                                <label for="goalsToBeAchieved">Zu erreichende Ziele:</label>
+                                <textarea id="goalsToBeAchieved" name="goals_to_be_achieved" class="form-control" rows="6"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Date Info -->
+                        <div class="config-section">
+                            <h3>Datum-Informationen</h3>
+                            <div class="form-group">
+                                <label for="dateInfoName">Name:</label>
+                                <input type="text" id="dateInfoName" name="date_info.name" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Response Timing -->
+                        <div class="config-section">
+                            <h3>Antwort-Timing</h3>
+                            <div class="form-group">
+                                <label for="firstMessageDelay">Erste Nachricht Verzögerung (Sekunden):</label>
+                                <input type="number" id="firstMessageDelay" name="response_timing.first_message_delay" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="randomVariationPercentage">Zufällige Variation (%):</label>
+                                <input type="number" id="randomVariationPercentage" name="response_timing.random_variation_percentage" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="minResponseTime">Minimale Antwortzeit (Sekunden):</label>
+                                <input type="number" id="minResponseTime" name="response_timing.min_response_time" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Tim Info Levels -->
+                        <div class="config-section">
+                            <h3>Tim-Info-Level</h3>
+                            <div class="form-group">
+                                <label for="userInfoNone">Keine Info:</label>
+                                <textarea id="userInfoNone" name="user_info_levels.none" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="userInfoMinimal">Minimal:</label>
+                                <textarea id="userInfoMinimal" name="user_info_levels.minimal" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="userInfoBasic">Basic:</label>
+                                <textarea id="userInfoBasic" name="user_info_levels.basic" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="userInfoExtended">Extended:</label>
+                                <textarea id="userInfoExtended" name="user_info_levels.extended" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="userInfoFull">Vollständig:</label>
+                                <textarea id="userInfoFull" name="user_info_levels.full" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Defensive Info -->
+                        <div class="config-section">
+                            <h3>Defensive Informationen</h3>
+                            <div class="form-group">
+                                <label for="defensiveInfoDescription">Beschreibung:</label>
+                                <textarea id="defensiveInfoDescription" name="defensive_info.description" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="defensiveInfoFavoriteFood">Lieblingsessen:</label>
+                                <input type="text" id="defensiveInfoFavoriteFood" name="defensive_info.favorite_food" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="defensiveInfoWork">Arbeit:</label>
+                                <input type="text" id="defensiveInfoWork" name="defensive_info.work" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="defensiveInfoTravel">Reisen:</label>
+                                <textarea id="defensiveInfoTravel" name="defensive_info.travel" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="saveFullConfig" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Vollständige Konfiguration speichern
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conversation Configuration -->
+            <div class="tab-content" id="conversation">
+                <div class="card">
+                    <h2><i class="fas fa-comments"></i> Konversationsphasen</h2>
+                    <form id="conversationForm">
+                        <div class="phase-section">
+                            <h3>Icebreaker Phase</h3>
+                            <div class="form-group">
+                                <label for="icebreakerGoal">Ziel:</label>
+                                <textarea id="icebreakerGoal" name="conversation_phases.icebreaker.goal" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="icebreakerMaxMessages">Max. Nachrichten:</label>
+                                <input type="number" id="icebreakerMaxMessages" name="conversation_phases.icebreaker.max_messages" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="phase-section">
+                            <h3>Interests Phase</h3>
+                            <div class="form-group">
+                                <label for="interestsGoal">Ziel:</label>
+                                <textarea id="interestsGoal" name="conversation_phases.interests.goal" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="interestsMaxMessages">Max. Nachrichten:</label>
+                                <input type="number" id="interestsMaxMessages" name="conversation_phases.interests.max_messages" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="phase-section">
+                            <h3>Compatibility Phase</h3>
+                            <div class="form-group">
+                                <label for="compatibilityGoal">Ziel:</label>
+                                <textarea id="compatibilityGoal" name="conversation_phases.compatibility.goal" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="compatibilityMaxMessages">Max. Nachrichten:</label>
+                                <input type="number" id="compatibilityMaxMessages" name="conversation_phases.compatibility.max_messages" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="phase-section">
+                            <h3>Defensive Informationen</h3>
+                            <div class="form-group">
+                                <label for="defensiveInfo">Persönliche Informationen (nur bei direkten Fragen verwenden):</label>
+                                <textarea id="defensiveInfo" name="defensive_info" class="form-control" rows="5"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Speichern
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Timing Configuration -->
+            <div class="tab-content" id="timing">
+                <div class="card">
+                    <h2><i class="fas fa-clock"></i> Antwort-Timing</h2>
+                    <form id="timingForm">
+                        <div class="form-group">
+                            <label for="minResponseDelay">Minimale Antwortzeit (Minuten):</label>
+                            <input type="number" id="minResponseDelay" name="response_timing.min_delay_minutes" class="form-control" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxResponseDelay">Maximale Antwortzeit (Minuten):</label>
+                            <input type="number" id="maxResponseDelay" name="response_timing.max_delay_minutes" class="form-control" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="randomFactor">Random-Faktor (0-1):</label>
+                            <input type="number" id="randomFactor" name="response_timing.random_factor" class="form-control" step="0.1" min="0" max="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="newMatchDelay">Verzögerung bei neuem Match (Minuten):</label>
+                            <input type="number" id="newMatchDelay" name="response_timing.new_match_delay_minutes" class="form-control" step="0.1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Speichern
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Match Instructions -->
+            <div class="tab-content" id="matches">
+                <div class="card">
+                    <h2><i class="fas fa-users"></i> Match-spezifische Anweisungen</h2>
+                    <div class="match-instructions-container">
+                        <div class="add-match-section">
+                            <h3>Neue Anweisung hinzufügen</h3>
+                            <div class="form-group">
+                                <label for="newMatchName">Match-Name:</label>
+                                <input type="text" id="newMatchName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="newMatchInstruction">Anweisung:</label>
+                                <textarea id="newMatchInstruction" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="button" id="addMatchInstruction" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Hinzufügen
+                            </button>
+                        </div>
+
+                        <div class="existing-instructions">
+                            <h3>Bestehende Anweisungen</h3>
+                            <div id="matchInstructionsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excluded Chats -->
+            <div class="tab-content" id="excluded">
+                <div class="card">
+                    <h2><i class="fas fa-ban"></i> Ausgeschlossene Chats</h2>
+                    <div class="excluded-chats-container">
+                        <div class="add-excluded-section">
+                            <h3>Chat ausschließen</h3>
+                            <div class="form-group">
+                                <label for="newExcludedChat">Chat-Name:</label>
+                                <input type="text" id="newExcludedChat" class="form-control">
+                            </div>
+                            <button type="button" id="addExcludedChat" class="btn btn-warning">
+                                <i class="fas fa-ban"></i> Ausschließen
+                            </button>
+                        </div>
+
+                        <div class="excluded-list">
+                            <h3>Aktuell ausgeschlossene Chats</h3>
+                            <div id="excludedChatsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Debug Settings -->
+            <div class="tab-content" id="debug">
+                <div class="card">
+                    <h2><i class="fas fa-bug"></i> Debug-Einstellungen</h2>
+                    <form id="debugForm">
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="botDebug" name="bot_debug">
+                                Bot Debug
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="apiDebug" name="api_debug">
+                                API Debug
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="chatDebug" name="chat_debug">
+                                Chat Debug
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="storageDebug" name="storage_debug">
+                                Storage Debug
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Speichern
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="tab-content" id="system">
+                <div class="card">
+                    <h2><i class="fas fa-server"></i> System-Status</h2>
+                    <div id="systemStatus"></div>
+                    <button type="button" id="refreshStatus" class="btn btn-info">
+                        <i class="fas fa-refresh"></i> Status aktualisieren
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
