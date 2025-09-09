@@ -132,4 +132,5 @@ python main.py --debug
 
 *  **Web dashboard** is not functional yet → CLI usage is recommended
 *  **Tinder Auth Token** expires roughly every **48 hours** → needs to be renewed frequently
-*  **Database override**: If the bot is started without valid Tinder access, the local database of existing chats may be overwritten
+*  **Database override** If the bot is started without valid Tinder access, the local database of existing chats may be overwritten
+*  **Setup** The automated Setup is not working at all
